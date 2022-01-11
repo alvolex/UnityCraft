@@ -10,22 +10,25 @@ public class Block : MonoBehaviour
         BOTTOM, TOP, LEFT, RIGHT, FRONT, BACK
     }
 
+    [SerializeField] private Material atlas;
     [SerializeField] private Vector3 posToBuildBlock = new Vector3(0,0,0);
+    [SerializeField] private MeshUtils.BlockType blockType;
     
 
     void Start()
     {
         MeshFilter mf = gameObject.AddComponent<MeshFilter>();
         MeshRenderer mr = gameObject.AddComponent<MeshRenderer>();
+        mr.material = atlas;
 
         //Use our quad class to build all the sides of our block and put them in an array
         Quad[] quads = new Quad[6];
-        quads[0] = new Quad(BlockSide.BOTTOM, posToBuildBlock);
-        quads[1] = new Quad(BlockSide.TOP, posToBuildBlock);
-        quads[2] = new Quad(BlockSide.LEFT, posToBuildBlock);
-        quads[3] = new Quad(BlockSide.RIGHT, posToBuildBlock);
-        quads[4] = new Quad(BlockSide.FRONT, posToBuildBlock);
-        quads[5] = new Quad(BlockSide.BACK, posToBuildBlock);
+        quads[0] = new Quad(BlockSide.BOTTOM, posToBuildBlock, blockType);
+        quads[1] = new Quad(BlockSide.TOP, posToBuildBlock, blockType);
+        quads[2] = new Quad(BlockSide.LEFT, posToBuildBlock, blockType);
+        quads[3] = new Quad(BlockSide.RIGHT, posToBuildBlock, blockType);
+        quads[4] = new Quad(BlockSide.FRONT, posToBuildBlock, blockType);
+        quads[5] = new Quad(BlockSide.BACK, posToBuildBlock, blockType);
 
         //Take the quad meshes we create above and put them into a new array that will be sent to our MeshUtils to be
         //merged into a single mesh.

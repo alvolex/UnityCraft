@@ -6,7 +6,7 @@ public class Quad
 {
     public Mesh mesh;
 
-    public Quad(Block.BlockSide side, Vector3 offset)
+    public Quad(Block.BlockSide side, Vector3 offset, MeshUtils.BlockType blockType)
     {
         mesh = new Mesh();
         mesh.name = "ScriptedQuad";
@@ -19,11 +19,16 @@ public class Quad
         Vector2[] uvs = new Vector2[4];
         int[] triangles = new int[6];
 
-        Vector2 uv00 = new Vector2(0, 0);
-        Vector2 uv10 = new Vector2(1, 0);
-        Vector2 uv01 = new Vector2(0, 1);
-        Vector2 uv11 = new Vector2(1, 1);
-        
+        //Get the correct texture from the atlas
+        float size = 1f / 16f;
+        float xUv = size * (float)blockType % 16f;
+        float yUv = 1f - size * Mathf.Floor((float)blockType / 16f);
+ 
+        Vector2 uv00 = new Vector2(xUv, yUv - size);
+        Vector2 uv01 = new Vector2(xUv, yUv);
+        Vector2 uv10 = new Vector2(xUv + size, yUv - size);
+        Vector2 uv11 = new Vector2(xUv + size, yUv);
+
         //Our Vertices / points. We need to define 8 vertices since there are 8 distinct corners in a cube.
         Vector3 p0 = new Vector3(-0.5f, -0.5f, 0.5f) + offset;
         Vector3 p1 = new Vector3(0.5f, -0.5f, 0.5f) + offset;

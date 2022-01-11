@@ -17,6 +17,20 @@ using VertexData = System.Tuple<UnityEngine.Vector3, UnityEngine.Vector3, UnityE
 
 public static class MeshUtils
 {
+  
+  const float TEX_SIZE = 0.0625f;
+  
+  //Blocktypes where the int value is it's position in the atlas
+  public enum BlockType
+  {
+    GRASSTOP = 145,
+    GRASSSIDE = 3,
+    DIRT = 2,
+    WATER = 209,
+    STONE = 16,
+    SAND = 18
+  }
+
   public static Mesh MergeMeshes(Mesh[] meshes)
   {
     Mesh mesh = new Mesh();

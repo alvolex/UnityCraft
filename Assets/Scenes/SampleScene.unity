@@ -355,6 +355,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   atlas: {fileID: 2100000, guid: 53cd63d5b445f7a4dbdf824d00c309cf, type: 2}
   posToBuildBlock: {x: 0, y: 0, z: 0}
+  blockType: 3
 --- !u!4 &1189653239
 Transform:
   m_ObjectHideFlags: 0
