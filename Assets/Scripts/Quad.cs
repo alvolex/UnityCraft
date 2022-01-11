@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Quad
 {
-    public Mesh Build(Block.BlockSide side)
+    public Mesh Build(Block.BlockSide side, Vector3 offset)
     {
         Mesh mesh;
 
@@ -25,14 +25,14 @@ public class Quad
         Vector2 uv11 = new Vector2(1, 1);
         
         //Our Vertices / points. We need to define 8 vertices since there are 8 distinct corners in a cube.
-        Vector3 p0 = new Vector3(-0.5f, -0.5f, 0.5f);
-        Vector3 p1 = new Vector3(0.5f, -0.5f, 0.5f);
-        Vector3 p2 = new Vector3(0.5f, -0.5f, -0.5f);
-        Vector3 p3 = new Vector3(-0.5f, -0.5f, -0.5f);
-        Vector3 p4 = new Vector3(-0.5f, 0.5f, 0.5f);
-        Vector3 p5 = new Vector3(0.5f, 0.5f, 0.5f);
-        Vector3 p6 = new Vector3(0.5f, 0.5f, -0.5f);
-        Vector3 p7 = new Vector3(-0.5f, 0.5f, -0.5f);
+        Vector3 p0 = new Vector3(-0.5f, -0.5f, 0.5f) + offset;
+        Vector3 p1 = new Vector3(0.5f, -0.5f, 0.5f) + offset;
+        Vector3 p2 = new Vector3(0.5f, -0.5f, -0.5f) + offset;
+        Vector3 p3 = new Vector3(-0.5f, -0.5f, -0.5f) + offset;
+        Vector3 p4 = new Vector3(-0.5f, 0.5f, 0.5f) + offset;
+        Vector3 p5 = new Vector3(0.5f, 0.5f, 0.5f) + offset;
+        Vector3 p6 = new Vector3(0.5f, 0.5f, -0.5f) + offset;
+        Vector3 p7 = new Vector3(-0.5f, 0.5f, -0.5f) + offset;
 
         switch (side)
         {
@@ -73,18 +73,18 @@ public class Quad
                 triangles = new[] {3, 1, 0, 3, 2, 1};
                 break;
             }
-            case Block.BlockSide.LEFT:
+            case Block.BlockSide.RIGHT:
             {
                 vertices = new Vector3[] {p5, p6, p2, p1};
-                normals = new Vector3[] {Vector3.left, Vector3.left, Vector3.left, Vector3.left};
+                normals = new Vector3[] {Vector3.right, Vector3.right, Vector3.right, Vector3.right};
                 uvs = new Vector2[] {uv11, uv01, uv00, uv10};
                 triangles = new[] {3, 1, 0, 3, 2, 1};
                 break;
             }
-            case Block.BlockSide.RIGHT:
+            case Block.BlockSide.LEFT:
             {
                 vertices = new Vector3[] {p7, p4, p0, p3};
-                normals = new Vector3[] {Vector3.right, Vector3.right, Vector3.right, Vector3.right};
+                normals = new Vector3[] {Vector3.left, Vector3.left, Vector3.left, Vector3.left};
                 uvs = new Vector2[] {uv11, uv01, uv00, uv10};
                 triangles = new[] {3, 1, 0, 3, 2, 1};
                 break;
