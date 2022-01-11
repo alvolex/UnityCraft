@@ -19,7 +19,7 @@ public class Block : MonoBehaviour
 
         //Use our quad class to build a quad and assign the returned mesh to out filter
         Quad q = new Quad();
-        mf.mesh = q.Build(sideToBuild, new Vector3(1,2,1));
+        mf.mesh = q.Build(sideToBuild, new Vector3(1,   0,0));
     }
 
     // Update is called once per frame
