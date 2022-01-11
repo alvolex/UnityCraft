@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Quad
 {
-    public Mesh Build(Block.BlockSide side, Vector3 offset)
-    {
-        Mesh mesh;
+    public Mesh mesh;
 
+    public Quad(Block.BlockSide side, Vector3 offset)
+    {
         mesh = new Mesh();
         mesh.name = "ScriptedQuad";
         
@@ -98,7 +98,6 @@ public class Quad
         
         mesh.RecalculateBounds(); //Unity calculates the bounds so we can use colliders later.
 
-        return mesh;
     }
 
 }
