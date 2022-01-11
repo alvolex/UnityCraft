@@ -30,6 +30,11 @@ public static class MeshUtils
     STONE = 16,
     SAND = 18
   }
+  //Enum to keep track which side of our block/cube we're currently building.
+  public enum BlockSide
+  {
+    BOTTOM, TOP, LEFT, RIGHT, FRONT, BACK
+  }
 
   public static Mesh MergeMeshes(Mesh[] meshes)
   {

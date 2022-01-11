@@ -2,33 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Block : MonoBehaviour
+public class Block
 {
-    //Enum to keep track which side of our block/cube we're currently building. The Quad class is setup to create FRONT first.
-    public enum BlockSide
+    public Mesh mesh;
+
+    public Block(Vector3 offset, MeshUtils.BlockType blockType)
     {
-        BOTTOM, TOP, LEFT, RIGHT, FRONT, BACK
-    }
-
-    [SerializeField] private Material atlas;
-    [SerializeField] private Vector3 posToBuildBlock = new Vector3(0,0,0);
-    [SerializeField] private MeshUtils.BlockType blockType;
-    
-
-    void Start()
-    {
-        MeshFilter mf = gameObject.AddComponent<MeshFilter>();
-        MeshRenderer mr = gameObject.AddComponent<MeshRenderer>();
-        mr.material = atlas;
-
         //Use our quad class to build all the sides of our block and put them in an array
         Quad[] quads = new Quad[6];
-        quads[0] = new Quad(BlockSide.BOTTOM, posToBuildBlock, blockType);
-        quads[1] = new Quad(BlockSide.TOP, posToBuildBlock, blockType);
-        quads[2] = new Quad(BlockSide.LEFT, posToBuildBlock, blockType);
-        quads[3] = new Quad(BlockSide.RIGHT, posToBuildBlock, blockType);
-        quads[4] = new Quad(BlockSide.FRONT, posToBuildBlock, blockType);
-        quads[5] = new Quad(BlockSide.BACK, posToBuildBlock, blockType);
+        quads[0] = new Quad(MeshUtils.BlockSide.BOTTOM, offset, blockType);
+        quads[1] = new Quad(MeshUtils.BlockSide.TOP, offset, blockType);
+        quads[2] = new Quad(MeshUtils.BlockSide.LEFT, offset, blockType);
+        quads[3] = new Quad(MeshUtils.BlockSide.RIGHT, offset, blockType);
+        quads[4] = new Quad(MeshUtils.BlockSide.FRONT, offset, blockType);
+        quads[5] = new Quad(MeshUtils.BlockSide.BACK, offset, blockType);
 
         //Take the quad meshes we create above and put them into a new array that will be sent to our MeshUtils to be
         //merged into a single mesh.
@@ -41,13 +28,8 @@ public class Block : MonoBehaviour
         sideMeshes[5] = quads[5].mesh;
       
         //Use our mesh utils to merge all the sides of our block into a single mesh, then we assign that new mesh
-        mf.mesh = MeshUtils.MergeMeshes(sideMeshes);
-        mf.mesh.name = "Cube_0_0_0";
+        mesh = MeshUtils.MergeMeshes(sideMeshes);
+        mesh.name = "Cube_0_0_0";
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
