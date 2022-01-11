@@ -2,13 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Quad : MonoBehaviour
+public class Quad
 {
-    void Start()
+    public Mesh Build(Block.BlockSide side)
     {
         Mesh mesh;
-        MeshFilter mf = gameObject.AddComponent<MeshFilter>();
-        MeshRenderer mr = gameObject.AddComponent<MeshRenderer>();
 
         mesh = new Mesh();
         mesh.name = "ScriptedQuad";
@@ -35,30 +33,63 @@ public class Quad : MonoBehaviour
         Vector3 p5 = new Vector3(0.5f, 0.5f, 0.5f);
         Vector3 p6 = new Vector3(0.5f, 0.5f, -0.5f);
         Vector3 p7 = new Vector3(-0.5f, 0.5f, -0.5f);
-        
-        
-        //Pick 4 of these vertices that make up two triangles
-        vertices = new Vector3[]
-        {
-            p4, p5, p1, p0
-        };
-        
-        normals = new Vector3[]
-        {
-            Vector3.forward, Vector3.forward, Vector3.forward, Vector3.forward
-        };
 
-        uvs = new Vector2[]
+        switch (side)
         {
-            uv11, uv01, uv00, uv10
-        };
-
-        //Getting the correct points for our triangles. The first 3 will be the first triangle and the last 3 the second triangle
-        //These values corresponds to the vertices in our vertices array. eg: 3 represents p0, 1 = p5, 0 = p4 etc..
-        
-        //The order of the triangles doesn't matter, but the order of the VERTICES do matter.
-        //Ther vertices needs to be picked in clockwise order.
-        triangles = new[] {3, 1, 0, 3, 2, 1};
+            case Block.BlockSide.FRONT:
+            {
+                //Pick 4 of these vertices that make up two triangles
+                vertices = new Vector3[] {p4, p5, p1, p0};
+                normals = new Vector3[] {Vector3.forward, Vector3.forward, Vector3.forward, Vector3.forward};
+                uvs = new Vector2[] {uv11, uv01, uv00, uv10};
+                //Getting the correct points for our triangles. The first 3 will be the first triangle and the last 3 the second triangle
+                //These values corresponds to the vertices in our vertices array. eg: 3 represents p0, 1 = p5, 0 = p4 etc..
+                //The order of the triangles doesn't matter, but the order of the VERTICES do matter.
+                //Ther vertices needs to be picked in clockwise order.
+                triangles = new[] {3, 1, 0, 3, 2, 1};
+                break;
+            }
+            case Block.BlockSide.BACK:
+            {
+                vertices = new Vector3[] {p6, p7, p3, p2};
+                normals = new Vector3[] {Vector3.back, Vector3.back, Vector3.back, Vector3.back};
+                uvs = new Vector2[] {uv11, uv01, uv00, uv10};
+                triangles = new[] {3, 1, 0, 3, 2, 1};
+                break;
+            }
+            case Block.BlockSide.TOP:
+            {
+                vertices = new Vector3[] {p7, p6, p5, p4};
+                normals = new Vector3[] {Vector3.up, Vector3.up, Vector3.up, Vector3.up};
+                uvs = new Vector2[] {uv11, uv01, uv00, uv10};
+                triangles = new[] {3, 1, 0, 3, 2, 1};
+                break;
+            }
+            case Block.BlockSide.BOTTOM:
+            {
+                vertices = new Vector3[] {p0, p1, p2, p3};
+                normals = new Vector3[] {Vector3.down, Vector3.down, Vector3.down, Vector3.down};
+                uvs = new Vector2[] {uv11, uv01, uv00, uv10};
+                triangles = new[] {3, 1, 0, 3, 2, 1};
+                break;
+            }
+            case Block.BlockSide.LEFT:
+            {
+                vertices = new Vector3[] {p5, p6, p2, p1};
+                normals = new Vector3[] {Vector3.left, Vector3.left, Vector3.left, Vector3.left};
+                uvs = new Vector2[] {uv11, uv01, uv00, uv10};
+                triangles = new[] {3, 1, 0, 3, 2, 1};
+                break;
+            }
+            case Block.BlockSide.RIGHT:
+            {
+                vertices = new Vector3[] {p7, p4, p0, p3};
+                normals = new Vector3[] {Vector3.right, Vector3.right, Vector3.right, Vector3.right};
+                uvs = new Vector2[] {uv11, uv01, uv00, uv10};
+                triangles = new[] {3, 1, 0, 3, 2, 1};
+                break;
+            }
+        }
 
         mesh.vertices = vertices;
         mesh.normals = normals;
@@ -67,8 +98,7 @@ public class Quad : MonoBehaviour
         
         mesh.RecalculateBounds(); //Unity calculates the bounds so we can use colliders later.
 
-        mf.mesh = mesh; //Put our newly created mesh into the mesh filter
-
+        return mesh;
     }
 
 }
