@@ -8,6 +8,7 @@ using Unity.Rendering;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Random = UnityEngine.Random;
 
 public class Chunk : MonoBehaviour
 {
@@ -18,10 +19,10 @@ public class Chunk : MonoBehaviour
 
     private Block[,,] blocks; //Multidimensional array to store the position of the voxel
     public Block[,,] Blocks => blocks;
-    
+
     //To convert the above 3-dimensional array to a Flat array we can use [x + WIDTH * (y + DEPTH * z) = Original[X,Y,Z]
     public MeshUtils.BlockType[] chunkData;
-    
+
     //This will handle building our chunks and landscapes
     void BuildChunk()
     {
@@ -30,7 +31,14 @@ public class Chunk : MonoBehaviour
 
         for (int i = 0; i < blockCount; i++)
         {
-            chunkData[i] = MeshUtils.BlockType.DIRT;
+            if (Random.Range(0, 100) > 30)
+            {
+                chunkData[i] = MeshUtils.BlockType.AIR;
+            }
+            else
+            {
+                chunkData[i] = MeshUtils.BlockType.DIRT;
+            }
         }
     }
 
@@ -43,7 +51,7 @@ public class Chunk : MonoBehaviour
         BuildChunk();
 
         //Setup for unity Jobs / Burst compiler
-        var inputMeshes = new List<Mesh>(width * height * depth);
+        var inputMeshes = new List<Mesh>();
         int vertexStart = 0;
         int triangleStart = 0;
         int meshCount = width * height * depth;
@@ -63,24 +71,25 @@ public class Chunk : MonoBehaviour
             {
                 for (int x = 0; x < width; x++)
                 {
-                    
-                    blocks[x, y, z] =
-                        new Block(new Vector3(x, y, z),
-                            chunkData[x + width * (y + depth * z)], this); //Here we set the block that will be on coordinate X Y Z to be a new block of type dirt in this case. Chunkdata holds the type of block at the this X Y Z
-                    
-                    inputMeshes.Add(blocks[x, y, z]
-                        .mesh); //Add the mesh that we create in the line above into our mesh array
-                    var vertCount = blocks[x, y, z].mesh.vertexCount; //Get the amount of vertices in the current block
-                    var triCount =
-                        (int) blocks[x, y, z].mesh
-                            .GetIndexCount(0); //This will return the amount of triangles in the current mesh
+                    //Here we set the block that will be on coordinate X Y Z to be a new block of type dirt in this case. Chunkdata holds the type of block at the this X Y Z
+                    blocks[x, y, z] = new Block(new Vector3(x, y, z), chunkData[x + width * (y + depth * z)], this);
 
-                    jobs.vertexStart[m] = vertexStart;
-                    jobs.triangleStart[m] = triangleStart;
+                    if (blocks[x, y, z].mesh != null)
+                    {
+                        //Add the mesh that we create in the line above into our mesh array 
+                        inputMeshes.Add(blocks[x, y, z].mesh);
+                        //Get the amount of vertices in the current block
+                        var vertCount = blocks[x, y, z].mesh.vertexCount;
+                        //This will return the amount of triangles in the current mesh
+                        var triCount = (int) blocks[x, y, z].mesh.GetIndexCount(0);
 
-                    vertexStart += vertCount; //Add the amount of verts to our "index"
-                    triangleStart += triCount; //Add the amount of triangles to our "index"
-                    m++; //Update m since we now have added a new block.
+                        jobs.vertexStart[m] = vertexStart;
+                        jobs.triangleStart[m] = triangleStart;
+
+                        vertexStart += vertCount; //Add the amount of verts to our "index"
+                        triangleStart += triCount; //Add the amount of triangles to our "index"
+                        m++; //Update m since we now have added a new block.
+                    }
                 }
             }
         }
@@ -91,8 +100,8 @@ public class Chunk : MonoBehaviour
         jobs.outputMesh.SetIndexBufferParams(triangleStart, IndexFormat.UInt32);
         jobs.outputMesh.SetVertexBufferParams(vertexStart, new VertexAttributeDescriptor(VertexAttribute.Position),
             new VertexAttributeDescriptor(VertexAttribute.Normal, stream: 1),
-            new VertexAttributeDescriptor(VertexAttribute.TexCoord0, stream:2));
-        var handle = jobs.Schedule(meshCount, 4);
+            new VertexAttributeDescriptor(VertexAttribute.TexCoord0, stream: 2));
+        var handle = jobs.Schedule(inputMeshes.Count, 4);
 
         var newMesh = new Mesh();
         newMesh.name = "Chunk";
@@ -103,13 +112,13 @@ public class Chunk : MonoBehaviour
 
         jobs.outputMesh.subMeshCount = 1;
         jobs.outputMesh.SetSubMesh(0, sm);
-        
-        Mesh.ApplyAndDisposeWritableMeshData(outputMeshData, new []{newMesh});
-        
+
+        Mesh.ApplyAndDisposeWritableMeshData(outputMeshData, new[] {newMesh});
+
         jobs.meshData.Dispose();
         jobs.vertexStart.Dispose();
         jobs.triangleStart.Dispose();
-        
+
         newMesh.RecalculateBounds();
 
         mf.mesh = newMesh;
