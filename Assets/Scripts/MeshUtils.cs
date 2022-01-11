@@ -28,7 +28,8 @@ public static class MeshUtils
     DIRT = 2,
     WATER = 209,
     STONE = 16,
-    SAND = 18
+    SAND = 18,
+    AIR
   }
   //Enum to keep track which side of our block/cube we're currently building.
   public enum BlockSide

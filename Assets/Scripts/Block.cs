@@ -5,9 +5,12 @@ using UnityEngine;
 public class Block
 {
     public Mesh mesh;
+    private Chunk parentChunk;
 
-    public Block(Vector3 offset, MeshUtils.BlockType blockType)
+    public Block(Vector3 offset, MeshUtils.BlockType blockType, Chunk chunk)
     {
+        parentChunk = chunk;
+        
         //Use our quad class to build all the sides of our block and put them in an array
         Quad[] quads = new Quad[6];
         quads[0] = new Quad(MeshUtils.BlockSide.BOTTOM, offset, blockType);
@@ -30,6 +33,22 @@ public class Block
         //Use our mesh utils to merge all the sides of our block into a single mesh, then we assign that new mesh
         mesh = MeshUtils.MergeMeshes(sideMeshes);
         mesh.name = "Cube_0_0_0";
+    }
+
+    public bool HasSolidNeighbor(int x, int y, int z)
+    {
+        //Check if we're currently on the "edge" of the chunk
+        if (x < 0 || x >= parentChunk.width || y < 0 || y > parentChunk.height || z < 0 || z > parentChunk.depth)
+        {
+            return false;
+        }
+
+        if (parentChunk.chunkData[x + parentChunk.width * (y + parentChunk.depth * z)] == MeshUtils.BlockType.AIR || parentChunk.chunkData[x + parentChunk.width * (y + parentChunk.depth * z)] == MeshUtils.BlockType.WATER )
+        {
+            return false;
+        }
+
+        return true;
     }
 
 }

@@ -7,7 +7,6 @@ using Random = UnityEngine.Random;
 public class WorldController : MonoBehaviour
 {
     [SerializeField] private GameObject block;
-    [SerializeField] private int worldSize = 2;
     [SerializeField] private int width = 10;
     [SerializeField] private int height = 2;
     [SerializeField] private int depth = 10;

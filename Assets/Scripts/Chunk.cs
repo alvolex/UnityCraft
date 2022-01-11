@@ -5,18 +5,34 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Jobs.LowLevel.Unsafe;
 using Unity.Rendering;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 public class Chunk : MonoBehaviour
 {
     [SerializeField] private Material atlas;
-    [SerializeField] private int width = 2;
-    [SerializeField] private int height = 2;
-    [SerializeField] private int depth = 2;
+    [SerializeField] public int width = 2;
+    [SerializeField] public int height = 2;
+    [SerializeField] public int depth = 2;
 
     private Block[,,] blocks; //Multidimensional array to store the position of the voxel
     public Block[,,] Blocks => blocks;
+    
+    //To convert the above 3-dimensional array to a Flat array we can use [x + WIDTH * (y + DEPTH * z) = Original[X,Y,Z]
+    public MeshUtils.BlockType[] chunkData;
+    
+    //This will handle building our chunks and landscapes
+    void BuildChunk()
+    {
+        int blockCount = width * depth * height;
+        chunkData = new MeshUtils.BlockType[blockCount];
+
+        for (int i = 0; i < blockCount; i++)
+        {
+            chunkData[i] = MeshUtils.BlockType.DIRT;
+        }
+    }
 
     void Start()
     {
@@ -24,6 +40,7 @@ public class Chunk : MonoBehaviour
         MeshRenderer mr = gameObject.AddComponent<MeshRenderer>();
         mr.material = atlas;
         blocks = new Block[width, height, depth]; // X, Y , Z
+        BuildChunk();
 
         //Setup for unity Jobs / Burst compiler
         var inputMeshes = new List<Mesh>(width * height * depth);
@@ -46,10 +63,11 @@ public class Chunk : MonoBehaviour
             {
                 for (int x = 0; x < width; x++)
                 {
+                    
                     blocks[x, y, z] =
                         new Block(new Vector3(x, y, z),
-                            MeshUtils.BlockType
-                                .DIRT); //Here we set the block that will be on coordinate X Y Z to be a new block of type dirt in this case.
+                            chunkData[x + width * (y + depth * z)], this); //Here we set the block that will be on coordinate X Y Z to be a new block of type dirt in this case. Chunkdata holds the type of block at the this X Y Z
+                    
                     inputMeshes.Add(blocks[x, y, z]
                         .mesh); //Add the mesh that we create in the line above into our mesh array
                     var vertCount = blocks[x, y, z].mesh.vertexCount; //Get the amount of vertices in the current block
