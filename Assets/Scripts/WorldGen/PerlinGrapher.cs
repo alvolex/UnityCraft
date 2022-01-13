@@ -29,7 +29,7 @@ public class PerlinGrapher : MonoBehaviour
     {
         lr = GetComponent<LineRenderer>();
         lr.positionCount = 100;
-        int z = 11; //Chunk size +1 in this case
+        int z = 5; //Chunk size +1 in this case
         
         Vector3[] positions = new Vector3[lr.positionCount];
 
