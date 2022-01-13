@@ -8,6 +8,7 @@ using Unity.Rendering;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 public class Chunk : MonoBehaviour
@@ -16,8 +17,15 @@ public class Chunk : MonoBehaviour
     [SerializeField] public int width = 2;
     [SerializeField] public int height = 2;
     [SerializeField] public int depth = 2;
+
+    [Header("Perlin Settings")]
+    [SerializeField] private int heightScale = 10;
+    [SerializeField] private float perlinScale = 0.001f;
+    [SerializeField] private int octaves = 8;
+    [SerializeField] private float heightOffset = -33f;
     [SerializeField] private int generationSeed;
-    
+
+    public Vector3 chunkLocation;
 
     private Block[,,] blocks; //Multidimensional array to store the position of the voxel
     public Block[,,] Blocks => blocks;
@@ -38,11 +46,12 @@ public class Chunk : MonoBehaviour
 
         for (int i = 0; i < blockCount; i++)
         {
-            int x = i % width;
-            int y = (i / width) % height;
-            int z = i / (width * height);
+            //Get X, Y, Z for the current index/block
+            int x = i % width + (int)chunkLocation.x;
+            int y = (i / width) % height + (int)chunkLocation.y;
+            int z = i / (width * height) + (int)chunkLocation.z;
             
-            if (MeshUtils.FractalBrownianMotion(x, z,8, 0.001f, 10, -33f, generationSeed) > y)
+            if (MeshUtils.FractalBrownianMotion(x, z,octaves, perlinScale, heightScale, heightOffset, generationSeed) > y)
             {
                 chunkData[i] = MeshUtils.BlockType.DIRT;
             }
@@ -55,6 +64,17 @@ public class Chunk : MonoBehaviour
 
     void Start()
     {
+        CreateChunk(new Vector3(10 ,10,10), Vector3.zero);
+
+    }
+
+    public void CreateChunk(Vector3 dimensions, Vector3 chunkPos)
+    {
+        chunkLocation = chunkPos;
+        width = (int) dimensions.x;
+        height = (int) dimensions.y;
+        depth = (int) dimensions.z;
+        
         MeshFilter mf = gameObject.AddComponent<MeshFilter>();
         MeshRenderer mr = gameObject.AddComponent<MeshRenderer>();
         mr.material = atlas;
@@ -83,7 +103,7 @@ public class Chunk : MonoBehaviour
                 for (int x = 0; x < width; x++)
                 {
                     //Here we set the block that will be on coordinate X Y Z to be a new block of type dirt in this case. Chunkdata holds the type of block at the this X Y Z
-                    blocks[x, y, z] = new Block(new Vector3(x, y, z), chunkData[x + width * (y + depth * z)], this);
+                    blocks[x, y, z] = new Block(new Vector3(x, y, z) + chunkLocation, chunkData[x + width * (y + depth * z)], this);
 
                     if (blocks[x, y, z].mesh != null)
                     {
@@ -115,7 +135,7 @@ public class Chunk : MonoBehaviour
         var handle = jobs.Schedule(inputMeshes.Count, 4);
 
         var newMesh = new Mesh();
-        newMesh.name = "Chunk";
+        newMesh.name = $"Chunk_{chunkLocation.x}_{chunkLocation.y}_{chunkLocation.z}";
         var sm = new SubMeshDescriptor(0, triangleStart, MeshTopology.Triangles);
         sm.firstVertex = 0;
         sm.vertexCount = vertexStart;
