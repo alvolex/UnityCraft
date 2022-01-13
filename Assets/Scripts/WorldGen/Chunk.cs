@@ -20,7 +20,7 @@ public class Chunk : MonoBehaviour
     private Block[,,] blocks; //Multidimensional array to store the position of the voxel
     public Block[,,] Blocks => blocks;
 
-    //To convert the above 3-dimensional array to a Flat array we can use [x + WIDTH * (y + DEPTH * z) = Original[X,Y,Z]
+    //To convert the above 3-dimensional array to a Flat array we can use [x + WIDTH * (y + DEPTH * z)] = Original[X,Y,Z]
     public MeshUtils.BlockType[] chunkData;
 
     //This will handle building our chunks and landscapes
@@ -31,7 +31,7 @@ public class Chunk : MonoBehaviour
 
         for (int i = 0; i < blockCount; i++)
         {
-            if (Random.Range(0, 100) > 30)
+            if (Random.Range(0, 100) > 60)
             {
                 chunkData[i] = MeshUtils.BlockType.AIR;
             }

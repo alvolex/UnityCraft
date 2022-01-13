@@ -7,6 +7,7 @@ public class Block
 {
     public Mesh mesh;
     private Chunk parentChunk;
+    
 
     public Block(Vector3 offset, MeshUtils.BlockType blockType, Chunk chunk)
     {
@@ -14,6 +15,7 @@ public class Block
 
         //Use our quad class to build all the sides of our block and put them in an array
         List<Quad> quads = new List<Quad>();
+        
 
         if (blockType != MeshUtils.BlockType.AIR)
         {
