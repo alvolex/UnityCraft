@@ -64,8 +64,7 @@ public class Chunk : MonoBehaviour
 
     void Start()
     {
-        CreateChunk(new Vector3(10 ,10,10), Vector3.zero);
-
+        
     }
 
     public void CreateChunk(Vector3 dimensions, Vector3 chunkPos)
