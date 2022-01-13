@@ -10,7 +10,7 @@ public class PerlinGrapher : MonoBehaviour
     //For Fractal Brownian
     [SerializeField] private int octaves;
     [SerializeField] private float yHeightOffset;
-    
+    [SerializeField] private int seed;
 
     private void Start()
     {
@@ -49,7 +49,7 @@ public class PerlinGrapher : MonoBehaviour
         for (int i = 0; i < octaves; i++)
         {
             //PerlinScale = how often we sample, lower value gives smoother noise  - perlingHeightScale = Height of the peaks
-            total += Mathf.PerlinNoise(x * perlinScale * frequency, z * perlinScale * frequency)  * perlingHeightScale;
+            total += Mathf.PerlinNoise(x * perlinScale * frequency + seed, z * perlinScale * frequency + seed)  * perlingHeightScale;
             frequency *= 2; //FBM, this makes it so that we get more variation in our noise
         }
 

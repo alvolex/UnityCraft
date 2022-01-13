@@ -16,11 +16,18 @@ public class Chunk : MonoBehaviour
     [SerializeField] public int width = 2;
     [SerializeField] public int height = 2;
     [SerializeField] public int depth = 2;
+    [SerializeField] private int generationSeed;
+    
 
     private Block[,,] blocks; //Multidimensional array to store the position of the voxel
     public Block[,,] Blocks => blocks;
 
     //To convert the above 3-dimensional array to a Flat array we can use [x + WIDTH * (y + DEPTH * z)] = Original[X,Y,Z]
+    //Getting specific value from flat array:
+    //x = i % WIDTH
+    //y = (i / WIDTH) % HEIGHT
+    //z = i/ (WIDTH * height)
+    
     public MeshUtils.BlockType[] chunkData;
 
     //This will handle building our chunks and landscapes
@@ -31,13 +38,17 @@ public class Chunk : MonoBehaviour
 
         for (int i = 0; i < blockCount; i++)
         {
-            if (Random.Range(0, 100) > 60)
+            int x = i % width;
+            int y = (i / width) % height;
+            int z = i / (width * height);
+            
+            if (MeshUtils.FractalBrownianMotion(x, z,8, 0.001f, 10, -33f, generationSeed) > y)
             {
-                chunkData[i] = MeshUtils.BlockType.AIR;
+                chunkData[i] = MeshUtils.BlockType.DIRT;
             }
             else
             {
-                chunkData[i] = MeshUtils.BlockType.DIRT;
+                chunkData[i] = MeshUtils.BlockType.AIR;
             }
         }
     }

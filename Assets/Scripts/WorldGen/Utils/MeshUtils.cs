@@ -36,6 +36,21 @@ public static class MeshUtils
   {
     BOTTOM, TOP, LEFT, RIGHT, FRONT, BACK
   }
+  
+  public static float FractalBrownianMotion(float x, float z, int octaves, float perlinScale, float perlinHeightScale, float heightOffset, int perlinSeed)
+  {
+    float total = 0; //Total height
+    float frequency = 1;
+    for (int i = 0; i < octaves; i++)
+    {
+      //PerlinScale = how often we sample, lower value gives smoother noise  - perlingHeightScale = Height of the peaks
+      total += Mathf.PerlinNoise(x * perlinScale * frequency + perlinSeed, z * perlinScale * frequency + perlinSeed)  * perlinHeightScale;
+      frequency *= 2; //FBM, this makes it so that we get more variation in our noise
+    }
+
+    return total + heightOffset;
+  }
+  
 
   public static Mesh MergeMeshes(Mesh[] meshes)
   {
