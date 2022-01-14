@@ -26,9 +26,6 @@ public class World : MonoBehaviour
 
     IEnumerator BuildWorld()
     {
-        Debug.Log(loadingBar.maxValue);
-        Debug.Log(worldDimensions.x);
-        
         worldDimensions = worldSize;
         for (int z = 0; z < worldDimensions.z; z++)
         {
