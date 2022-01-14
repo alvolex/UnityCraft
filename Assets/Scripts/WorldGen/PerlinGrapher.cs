@@ -29,20 +29,20 @@ public class PerlinGrapher : MonoBehaviour
     {
         lr = GetComponent<LineRenderer>();
         lr.positionCount = 100;
-        int z = 5; //Chunk size +1 in this case
+        int z = 0; //Chunk size +1 in this case
         
         Vector3[] positions = new Vector3[lr.positionCount];
 
         for (int x = 0; x < lr.positionCount; x++)
         {
             //float y = Mathf.PerlinNoise(x * perlinScale, z *perlinScale); //Normal perlin
-            float y = FractalBrownianMotion(x,z); //Fractal Brownian Motion
-            positions[x] = new Vector3(x, y - yHeightOffset, z); //Draw a straight line that will runs along the X axis
+            float y = MeshUtils.FractalBrownianMotion(x,z, octaves, perlinScale, perlingHeightScale, yHeightOffset, seed); //Fractal Brownian Motion
+            positions[x] = new Vector3(x, y , z); //Draw a straight line that will runs along the X axis
         }
         lr.SetPositions(positions);
     }
 
-    float FractalBrownianMotion(float x, float z)
+    /*float FractalBrownianMotion(float x, float z)
     {
         float total = 0; //Total height
         float frequency = 1;
@@ -54,5 +54,5 @@ public class PerlinGrapher : MonoBehaviour
         }
 
         return total;
-    }
+    }*/
 }

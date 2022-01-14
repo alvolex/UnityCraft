@@ -50,7 +50,7 @@ MonoBehaviour:
   heightScale: 10
   perlinScale: 0.001
   octaves: 8
-  heightOffset: -20
+  heightOffset: -15
   generationSeed: 100
   chunkLocation: {x: 0, y: 0, z: 0}
   chunkData: 

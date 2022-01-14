@@ -17,15 +17,17 @@ public class World : MonoBehaviour
     public static Vector3 chunkDimensions = new Vector3(10, 10, 10);
     public GameObject chunkPrefab;
 
+
     private void Start()
     {
-        loadingBar.maxValue = worldDimensions.x * worldDimensions.y * worldDimensions.z; 
+        loadingBar.maxValue = worldSize.x * worldSize.y * worldSize.z; 
         StartCoroutine(BuildWorld());
     }
 
     IEnumerator BuildWorld()
     {
-        var loadingBarValue = 0;
+        Debug.Log(loadingBar.maxValue);
+        Debug.Log(worldDimensions.x);
         
         worldDimensions = worldSize;
         for (int z = 0; z < worldDimensions.z; z++)
@@ -37,8 +39,7 @@ public class World : MonoBehaviour
                     GameObject chunk = Instantiate(chunkPrefab);
                     Vector3 pos = new Vector3(x * chunkDimensions.x, y * chunkDimensions.y, z * chunkDimensions.z);
                     chunk.GetComponent<Chunk>().CreateChunk(chunkDimensions, pos);
-                    loadingBarValue++;
-                    loadingBar.value = loadingBarValue;
+                    loadingBar.value++;
                     yield return null;
                 }
             }
