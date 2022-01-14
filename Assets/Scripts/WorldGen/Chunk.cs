@@ -28,7 +28,13 @@ public class Chunk : MonoBehaviour
     public Vector3 chunkLocation;
 
     private Block[,,] blocks; //Multidimensional array to store the position of the voxel
+    //Getters
     public Block[,,] Blocks => blocks;
+    public int Octaves => octaves;
+    public float PerlinScale => perlinScale;
+    public int HeightScale => heightScale;
+    public float HeightOffset => heightOffset;
+    public int GenerationSeed => generationSeed;
 
     //To convert the above 3-dimensional array to a Flat array we can use [x + WIDTH * (y + DEPTH * z)] = Original[X,Y,Z]
     //Getting specific value from flat array:
@@ -60,11 +66,6 @@ public class Chunk : MonoBehaviour
                 chunkData[i] = MeshUtils.BlockType.AIR;
             }
         }
-    }
-
-    void Start()
-    {
-        
     }
 
     public void CreateChunk(Vector3 dimensions, Vector3 chunkPos)
