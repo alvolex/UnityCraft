@@ -5,12 +5,23 @@ using UnityEngine;
 public class PerlinGrapher : MonoBehaviour
 {
     private LineRenderer lr;
-    [SerializeField] private float perlingHeightScale = 2;
+    [SerializeField] private float perlinHeightScale = 2;
     [SerializeField] private float perlinScale = 0.5f;
+    [SerializeField, Range(0f,1f)] private float probability = 1;
+
     //For Fractal Brownian
     [SerializeField] private int octaves;
     [SerializeField] private float yHeightOffset;
     [SerializeField] private int seed;
+
+    public LineRenderer Lr => lr;
+    public float PerlinScale => perlinScale;
+    public float PerlinHeightScale => perlinHeightScale;
+    public float Probability => probability;
+    public int Octaves => octaves;
+    public int Seed => seed;
+    public float YHeightOffset => yHeightOffset;
+
 
     private void Start()
     {
@@ -36,7 +47,7 @@ public class PerlinGrapher : MonoBehaviour
         for (int x = 0; x < lr.positionCount; x++)
         {
             //float y = Mathf.PerlinNoise(x * perlinScale, z *perlinScale); //Normal perlin
-            float y = MeshUtils.FractalBrownianMotion(x,z, octaves, perlinScale, perlingHeightScale, yHeightOffset, seed); //Fractal Brownian Motion
+            float y = MeshUtils.FractalBrownianMotion(x,z, octaves, perlinScale, perlinHeightScale, yHeightOffset, seed); //Fractal Brownian Motion
             positions[x] = new Vector3(x, y , z); //Draw a straight line that will runs along the X axis
         }
         lr.SetPositions(positions);

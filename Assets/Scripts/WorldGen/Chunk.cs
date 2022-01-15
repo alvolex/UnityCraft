@@ -18,23 +18,11 @@ public class Chunk : MonoBehaviour
     [SerializeField] public int height = 2;
     [SerializeField] public int depth = 2;
 
-    [Header("Perlin Settings")]
-    [SerializeField] private int heightScale = 10;
-    [SerializeField] private float perlinScale = 0.001f;
-    [SerializeField] private int octaves = 8;
-    [SerializeField] private float heightOffset = -33f;
-    [SerializeField] private int generationSeed;
-
     public Vector3 chunkLocation;
 
     private Block[,,] blocks; //Multidimensional array to store the position of the voxel
     //Getters
     public Block[,,] Blocks => blocks;
-    public int Octaves => octaves;
-    public float PerlinScale => perlinScale;
-    public int HeightScale => heightScale;
-    public float HeightOffset => heightOffset;
-    public int GenerationSeed => generationSeed;
 
     //To convert the above 3-dimensional array to a Flat array we can use [x + WIDTH * (y + DEPTH * z)] = Original[X,Y,Z]
     //Getting specific value from flat array:
@@ -57,12 +45,21 @@ public class Chunk : MonoBehaviour
             int y = (i / width) % height + (int)chunkLocation.y;
             int z = i / (width * height) + (int)chunkLocation.z;
 
-            int surfaceHeight = (int)MeshUtils.FractalBrownianMotion(x, z, octaves, perlinScale, heightScale, heightOffset,
-                generationSeed); //Used to see where we currently are
+            //Find the height of the different layers
+            /*Surface*/
+            int surfaceHeight = (int)MeshUtils.FractalBrownianMotion(x, z, World.surfaceSettings.octaves, World.surfaceSettings.scale, World.surfaceSettings.heightScale, World.surfaceSettings.heightOffset,
+                World.surfaceSettings.seed); 
+            /*Stone*/
+            int stoneHeight = (int)MeshUtils.FractalBrownianMotion(x, z, World.stoneSettings.octaves, World.stoneSettings.scale, World.stoneSettings.heightScale, World.stoneSettings.heightOffset,
+                World.stoneSettings.seed); 
             
-            if (surfaceHeight > y)
+            if (surfaceHeight == y)
             {
                 chunkData[i] = MeshUtils.BlockType.GRASSSIDE;
+            }
+            else if (y < stoneHeight && Random.Range(0f,1f) <= World.stoneSettings.probability)
+            {
+                chunkData[i] = MeshUtils.BlockType.STONE;
             }
             else if (y < surfaceHeight)
             {

@@ -4,6 +4,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public struct PerlinSettings
+{
+    public float heightScale;
+    public float heightOffset;
+    public float scale;
+    public int octaves;
+    public int seed;
+    public float probability;
+
+    public PerlinSettings(float hs, float s, int o, float ho, int worldSeed, float p)
+    {
+        heightScale = hs;
+        scale =s;
+        octaves = o;
+        heightOffset = ho;
+        seed = worldSeed;
+        probability = p;
+    }
+}
+
 public class World : MonoBehaviour
 {
     [Header("Cameras and loading")]
@@ -16,11 +36,25 @@ public class World : MonoBehaviour
     public static Vector3 worldDimensions = new Vector3(3, 3, 3);
     public static Vector3 chunkDimensions = new Vector3(10, 10, 10);
     public GameObject chunkPrefab;
+    
+    [Header("Layers")] 
+    [SerializeField] private PerlinGrapher surface;
+    [SerializeField] private PerlinGrapher stone;
+
+    public static PerlinSettings surfaceSettings;
+    public static PerlinSettings stoneSettings;
 
 
     private void Start()
     {
-        loadingBar.maxValue = worldSize.x * worldSize.y * worldSize.z; 
+        loadingBar.maxValue = worldSize.x * worldSize.y * worldSize.z;
+        
+        surfaceSettings = new PerlinSettings(surface.PerlinHeightScale, surface.PerlinScale, surface.Octaves,
+            surface.YHeightOffset, surface.Seed, surface.Probability);
+        
+        stoneSettings = new PerlinSettings(stone.PerlinHeightScale, stone.PerlinScale, stone.Octaves,
+            stone.YHeightOffset, stone.Seed, stone.Probability);
+            
         StartCoroutine(BuildWorld());
     }
 
@@ -53,8 +87,8 @@ public class World : MonoBehaviour
         float xpos = (worldDimensions.x * chunkDimensions.x) / 2f;
         float zpos = (worldDimensions.z * chunkDimensions.y) / 2f;
         Chunk c = chunkPrefab.GetComponent<Chunk>();
-        float ypos = MeshUtils.FractalBrownianMotion(xpos, zpos, c.Octaves, c.PerlinScale, c.HeightScale,
-            c.HeightOffset, c.GenerationSeed) + 10f;
+        float ypos = MeshUtils.FractalBrownianMotion(xpos, zpos, surfaceSettings.octaves, surfaceSettings.scale, surfaceSettings.heightScale,
+            surfaceSettings.heightOffset, surfaceSettings.seed) + 10f;
         fpc.transform.position = new Vector3(xpos, ypos, zpos);
     }
 
