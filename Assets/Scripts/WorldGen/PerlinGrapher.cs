@@ -22,7 +22,6 @@ public class PerlinGrapher : MonoBehaviour
     public int Seed => seed;
     public float YHeightOffset => yHeightOffset;
 
-
     private void Start()
     {
         lr = GetComponent<LineRenderer>();

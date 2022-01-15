@@ -5,7 +5,7 @@ using UnityEngine;
 using VertexData = System.Tuple<UnityEngine.Vector3, UnityEngine.Vector3, UnityEngine.Vector2>;
 
 /// <summary>
-/// We'rem etting all the vertices, uvs and triangles from all meshes and putting them together into a single mesh which
+/// We're getting all the vertices, uvs and triangles from all meshes and putting them together into a single mesh which
 /// means taking all the vertices from multiple arrays and putting them into one array.  The same must happen for uvs and
 /// these must be aligned with the appropriate vertices.  Then because there might be multiple vertices that are the same
 /// after meshes have been combined, we want to get rid of any duplicates, but we need to make sure the integrity of
@@ -29,6 +29,15 @@ public static class MeshUtils
     WATER = 209,
     STONE = 16,
     SAND = 18,
+    BEDROCK = 37,
+    GOLD = 32,
+    REDSTONE = 51,
+    DIAMOND = 50,
+    NOCRACK,
+    CRACK1 = 240,
+    CRACK2 = 241,
+    CRACK3 = 242,
+    CRACK4 = 243,
     AIR
   }
   //Enum to keep track which side of our block/cube we're currently building.
