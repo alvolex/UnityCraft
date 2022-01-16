@@ -40,6 +40,7 @@ public static class MeshUtils
     CRACK4 = 243,
     AIR
   }
+  
   //Enum to keep track which side of our block/cube we're currently building.
   public enum BlockSide
   {
@@ -58,6 +59,21 @@ public static class MeshUtils
     }
 
     return total + heightOffset;
+  }
+
+  public static float FractalBrownianMotion3D(float x, float y, float z, int octaves, float perlinScale, float perlinHeightScale,
+    float heightOffset, int perlinSeed)
+  {
+    float xy = FractalBrownianMotion(x, y, octaves, perlinScale, perlinHeightScale, heightOffset, perlinSeed);
+    float xz = FractalBrownianMotion(x, z, octaves, perlinScale, perlinHeightScale, heightOffset, perlinSeed);
+    
+    float yx = FractalBrownianMotion(y, x, octaves, perlinScale, perlinHeightScale, heightOffset, perlinSeed);
+    float yz = FractalBrownianMotion(y, z, octaves, perlinScale, perlinHeightScale, heightOffset, perlinSeed);
+    
+    float zx = FractalBrownianMotion(z, x, octaves, perlinScale, perlinHeightScale, heightOffset, perlinSeed);
+    float zy = FractalBrownianMotion(z, y, octaves, perlinScale, perlinHeightScale, heightOffset, perlinSeed);
+
+    return (xy + xz + yx + yz + zx + zy) / 6.0f; //Get the average of all the noise
   }
   
 
