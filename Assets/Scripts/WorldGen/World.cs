@@ -42,12 +42,14 @@ public class World : MonoBehaviour
     [SerializeField] private PerlinGrapher stone;
     [SerializeField] private PerlinGrapher diamondTop;
     [SerializeField] private PerlinGrapher diamondBot;
+    [SerializeField] private Perlin3DGrapher caves;
 
     //
     public static PerlinSettings surfaceSettings;
     public static PerlinSettings stoneSettings;
     public static PerlinSettings diamondTopSettings;
     public static PerlinSettings diamondBotSettings;
+    public static PerlinSettings caveSettings;
 
 
     private void Start()
@@ -65,6 +67,9 @@ public class World : MonoBehaviour
         
         diamondBotSettings = new PerlinSettings(diamondBot.PerlinHeightScale, diamondBot.PerlinScale, diamondBot.Octaves,
             diamondBot.YHeightOffset, diamondBot.Seed, diamondBot.Probability);
+        
+        caveSettings = new PerlinSettings(caves.PerlinHeightScale, caves.PerlinScale, caves.Octaves,
+            caves.YHeightOffset, caves.Seed, caves.DrawCutOff);
             
         StartCoroutine(BuildWorld());
     }

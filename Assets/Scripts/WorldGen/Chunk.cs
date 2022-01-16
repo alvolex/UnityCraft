@@ -57,6 +57,22 @@ public class Chunk : MonoBehaviour
                 World.diamondTopSettings.seed);
             int diamondBotHeight = (int)MeshUtils.FractalBrownianMotion(x, z, World.diamondBotSettings.octaves, World.diamondBotSettings.scale, World.diamondBotSettings.heightScale, World.diamondBotSettings.heightOffset,
                 World.diamondBotSettings.seed);
+            /*Caves*/
+            int digCave = (int)MeshUtils.FractalBrownianMotion3D(x, y,z, World.caveSettings.octaves, World.caveSettings.scale, World.caveSettings.heightScale, World.caveSettings.heightOffset,
+                World.caveSettings.seed);
+            
+            //Bedrock the last layers
+            if (y == 0)
+            {
+                chunkData[i] = MeshUtils.BlockType.BEDROCK;
+                continue;
+            }
+            //Check if there should be a cave..
+            if (digCave < World.caveSettings.probability)
+            {
+                chunkData[i] = MeshUtils.BlockType.AIR;
+                continue;
+            }
             
             if (surfaceHeight == y)
             {
@@ -78,6 +94,8 @@ public class Chunk : MonoBehaviour
             {
                 chunkData[i] = MeshUtils.BlockType.AIR;
             }
+            
+            
         }
     }
 

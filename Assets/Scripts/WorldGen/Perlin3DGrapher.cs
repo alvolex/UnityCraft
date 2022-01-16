@@ -13,6 +13,13 @@ public class Perlin3DGrapher : MonoBehaviour
     [SerializeField] private int octaves;
     [SerializeField] private float yHeightOffset;
     [SerializeField] private int seed;
+    
+    public float PerlinScale => perlinScale;
+    public float PerlinHeightScale => perlinHeightScale;
+    public float DrawCutOff => drawCutOff;
+    public int Octaves => octaves;
+    public int Seed => seed;
+    public float YHeightOffset => yHeightOffset;
 
     void CreateCubes()
     {

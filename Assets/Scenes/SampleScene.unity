@@ -503,12 +503,13 @@ MonoBehaviour:
   loadingBar: {fileID: 1694670959}
   mainCam: {fileID: 963194225}
   fpc: {fileID: 208027894}
-  worldSize: {x: 1, y: 3, z: 1}
+  worldSize: {x: 10, y: 4, z: 10}
   chunkPrefab: {fileID: 5010652346304236277, guid: ff2f0943d8bb0f147a45c7217f0cdaec, type: 3}
   surface: {fileID: 1139015815}
   stone: {fileID: 479677282}
   diamondTop: {fileID: 751822194}
   diamondBot: {fileID: 1261859868}
+  caves: {fileID: 7725231051584317176, guid: 34bcc199a8c824d49a2e7b6381373aef, type: 3}
 --- !u!4 &658178383
 Transform:
   m_ObjectHideFlags: 0
